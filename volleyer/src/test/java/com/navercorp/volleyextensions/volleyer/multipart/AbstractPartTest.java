@@ -22,15 +22,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.junit.Test;
-import org.mockito.Matchers;
+import org.mockito.ArgumentMatchers;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import com.navercorp.volleyextensions.volleyer.http.ContentType;
-import com.navercorp.volleyextensions.volleyer.multipart.AbstractPart;
-import com.navercorp.volleyextensions.volleyer.multipart.Part;
 
 public class AbstractPartTest {
 
@@ -52,7 +50,7 @@ public class AbstractPartTest {
 		// When
 		part.write(out);
 		// Then
-		verify(out, atLeastOnce()).write(Matchers.any(byte[].class));
+		verify(out, atLeastOnce()).write(ArgumentMatchers.any(byte[].class));
 	}
 
 	@Test

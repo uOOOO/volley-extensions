@@ -35,6 +35,6 @@ public interface RequestCreator {
 	 * @return Request<T> newly created instance 
 	 */
 	<T> Request<T> createRequest(HttpContent httpContent, Class<T> clazz,
-			NetworkResponseParser responseParser, Listener<T> listener,
-			ErrorListener errorListener);
+                                 NetworkResponseParser responseParser, Listener<T> listener,
+                                 ErrorListener errorListener);
 }

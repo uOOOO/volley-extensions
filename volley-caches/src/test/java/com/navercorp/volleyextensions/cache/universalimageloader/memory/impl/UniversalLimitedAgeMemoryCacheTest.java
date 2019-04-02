@@ -24,13 +24,11 @@ import java.util.concurrent.TimeUnit;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.shadows.ShadowBitmap;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 
 import com.android.volley.toolbox.ImageLoader.ImageCache;
-import com.navercorp.volleyextensions.cache.universalimageloader.memory.impl.UniversalFifoLimitedMemoryCache;
 
 @RunWith(RobolectricTestRunner.class)
 @org.robolectric.annotation.Config(manifest=org.robolectric.annotation.Config.NONE)
@@ -39,7 +37,7 @@ public class UniversalLimitedAgeMemoryCacheTest {
     public void bitmapShouldBeCached() throws IOException, InterruptedException {
     	// Given
 		String url = "http://me.do/test1.jpg";
-		Bitmap image = ShadowBitmap.createBitmap(100, 100, Config.ALPHA_8);	
+		Bitmap image = Bitmap.createBitmap(100, 100, Config.ALPHA_8);
 		ImageCache cache = new UniversalFifoLimitedMemoryCache(1);
 
 		// When

@@ -29,12 +29,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.shadows.ShadowBitmap;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 
-import com.navercorp.volleyextensions.cache.universalimageloader.memory.UniversalImageCache;
 import com.nostra13.universalimageloader.cache.memory.MemoryCacheAware;
 
 @RunWith(RobolectricTestRunner.class)
@@ -42,7 +40,7 @@ public class UniversalImageCacheTest {
 	@Mock MemoryCacheAware<String, Bitmap> delegate;
 	@InjectMocks UniversalImageCache imageCache;
 	String key = "test";
-	Bitmap value = ShadowBitmap.createBitmap(100, 200, Config.ALPHA_8);
+	Bitmap value = Bitmap.createBitmap(100, 200, Config.ALPHA_8);
 
 	@Before
 	public void setUp(){

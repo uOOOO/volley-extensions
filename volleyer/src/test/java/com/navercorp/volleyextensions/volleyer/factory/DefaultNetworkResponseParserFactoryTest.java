@@ -15,12 +15,11 @@
  */
 package com.navercorp.volleyextensions.volleyer.factory;
 
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Matchers;
+import org.mockito.ArgumentMatcher;
+import org.mockito.ArgumentMatchers;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -52,7 +51,7 @@ public class DefaultNetworkResponseParserFactoryTest {
 	public void shouldAddJackson2NetworkResponserIfPresent() {
 		// Given
 		given(ClassUtils.isPresent(JACKSON_2_X_CLASS_NAME)).willReturn(true);
-		Matcher<TypedNetworkResponseParser> matcher = argMatcher(new PlainMatcher(){
+		ArgumentMatcher<TypedNetworkResponseParser> matcher = argMatcher(new PlainMatcher(){
 
 			@Override
 			public boolean matches(Object item) {
@@ -64,7 +63,7 @@ public class DefaultNetworkResponseParserFactoryTest {
 		// When
 		DefaultNetworkResponseParserFactory.addJacksonParserIfPresent(builder);
 		// Then
-		verify(builder).addParser(Matchers.argThat(matcher));
+		verify(builder).addParser(ArgumentMatchers.argThat(matcher));
 	}
 
 	@Test
@@ -72,7 +71,7 @@ public class DefaultNetworkResponseParserFactoryTest {
 		// Given
 		given(ClassUtils.isPresent(JACKSON_2_X_CLASS_NAME)).willReturn(false);
 		given(ClassUtils.isPresent(JACKSON_1_X_CLASS_NAME)).willReturn(true);
-		Matcher<TypedNetworkResponseParser> matcher = argMatcher(new PlainMatcher(){
+		ArgumentMatcher<TypedNetworkResponseParser> matcher = argMatcher(new PlainMatcher(){
 
 			@Override
 			public boolean matches(Object item) {
@@ -85,7 +84,7 @@ public class DefaultNetworkResponseParserFactoryTest {
 		DefaultNetworkResponseParserFactory.addJacksonParserIfPresent(builder);
 		// Then
 
-		verify(builder).addParser(Matchers.argThat(matcher));
+		verify(builder).addParser(ArgumentMatchers.argThat(matcher));
 	}
 
 	@Test
@@ -93,7 +92,7 @@ public class DefaultNetworkResponseParserFactoryTest {
 		// Given
 		given(ClassUtils.isPresent(JACKSON_2_X_CLASS_NAME)).willReturn(false);
 		given(ClassUtils.isPresent(JACKSON_1_X_CLASS_NAME)).willReturn(false);
-		Matcher<TypedNetworkResponseParser> matcher = argMatcher(new PlainMatcher(){
+		ArgumentMatcher<TypedNetworkResponseParser> matcher = argMatcher(new PlainMatcher(){
 
 			@Override
 			public boolean matches(Object item) {
@@ -109,14 +108,14 @@ public class DefaultNetworkResponseParserFactoryTest {
 		// When
 		DefaultNetworkResponseParserFactory.addJacksonParserIfPresent(builder);
 		// Then
-		verify(builder, never()).addParser(Matchers.argThat(matcher));
+		verify(builder, never()).addParser(ArgumentMatchers.argThat(matcher));
 	}
 
 	@Test
 	public void shouldAddSimpleXmlNetworkResponseParserIfPresent() {
 		// Given
 		given(ClassUtils.isPresent(SIMPLE_XML_CLASS_NAME)).willReturn(true);
-		Matcher<TypedNetworkResponseParser> matcher = argMatcher(new PlainMatcher(){
+		ArgumentMatcher<TypedNetworkResponseParser> matcher = argMatcher(new PlainMatcher(){
 
 			@Override
 			public boolean matches(Object item) {
@@ -128,14 +127,14 @@ public class DefaultNetworkResponseParserFactoryTest {
 		// When
 		DefaultNetworkResponseParserFactory.addSimpleXmlParserIfPresent(builder);
 		// Then
-		verify(builder).addParser(Matchers.argThat(matcher));
+		verify(builder).addParser(ArgumentMatchers.argThat(matcher));
 	}
 
 	@Test
 	public void shouldNotAddSimpleXmlNetworkResponseParserIfNotPresent() {
 		// Given
 		given(ClassUtils.isPresent(SIMPLE_XML_CLASS_NAME)).willReturn(false);
-		Matcher<TypedNetworkResponseParser> matcher = argMatcher(new PlainMatcher(){
+		ArgumentMatcher<TypedNetworkResponseParser> matcher = argMatcher(new PlainMatcher(){
 
 			@Override
 			public boolean matches(Object item) {
@@ -147,27 +146,15 @@ public class DefaultNetworkResponseParserFactoryTest {
 		// When
 		DefaultNetworkResponseParserFactory.addSimpleXmlParserIfPresent(builder);
 		// Then
-		verify(builder, never()).addParser(Matchers.argThat(matcher));
+		verify(builder, never()).addParser(ArgumentMatchers.argThat(matcher));
 	}
 
-	private static Matcher<TypedNetworkResponseParser> argMatcher(final PlainMatcher plainMatcher) {
-		return new Matcher<TypedNetworkResponseParser>(){
+	private static ArgumentMatcher<TypedNetworkResponseParser> argMatcher(final PlainMatcher plainMatcher) {
+		return new ArgumentMatcher<TypedNetworkResponseParser>(){
 
 			@Override
-			public void describeTo(Description description) {
-			}
-
-			@Override
-			public boolean matches(Object item) {
-				return plainMatcher.matches(item);
-			}
-
-			@Override
-			public void describeMismatch(Object item, Description mismatchDescription) {
-			}
-
-			@Override
-			public void _dont_implement_Matcher___instead_extend_BaseMatcher_() {
+			public boolean matches(TypedNetworkResponseParser argument) {
+				return plainMatcher.matches(argument);
 			}};
 	}
 

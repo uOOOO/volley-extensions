@@ -28,7 +28,7 @@ import com.navercorp.volleyextensions.view.ZoomableNetworkImageView;
 import com.navercorp.volleyextensions.view.ZoomableNetworkImageView.OnImageChangedListener;
 
 public class SingleTapZoomNetworkImageViewActivity extends Activity {
-	private static final String SAMPLE_IMAGE_URL = "http://www.phototravelpages.com/wallpapers/sunny-gardens-1024.jpg";
+	private static final String SAMPLE_IMAGE_URL = "https://www.google.co.kr/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png";
 	private ZoomableNetworkImageView zoomableImageView;
 	private ImageLoader imageLoader;
 	private ProgressBar circleProgressBar;

@@ -112,7 +112,7 @@ public class ShoppingItem implements Parcelable {
 		return item;
 	}
 
-	public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+	public static final Creator CREATOR = new Creator() {
 		public ShoppingItem createFromParcel(Parcel in) {
 			return ShoppingItem.createInstanceFromParcel(in);
 		}

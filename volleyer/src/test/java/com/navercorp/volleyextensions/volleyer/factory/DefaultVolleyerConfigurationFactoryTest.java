@@ -21,7 +21,6 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import com.navercorp.volleyextensions.volleyer.VolleyerConfiguration;
-import com.navercorp.volleyextensions.volleyer.factory.DefaultVolleyerConfigurationFactory;
 import com.navercorp.volleyextensions.volleyer.request.creator.DefaultRequestCreator;
 import com.navercorp.volleyextensions.volleyer.request.executor.DefaultRequestExecutor;
 import com.navercorp.volleyextensions.volleyer.response.parser.IntegratedNetworkResponseParser;

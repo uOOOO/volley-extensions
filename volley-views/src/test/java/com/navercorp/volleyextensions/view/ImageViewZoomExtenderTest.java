@@ -18,14 +18,13 @@ package com.navercorp.volleyextensions.view;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+import androidx.test.core.app.ApplicationProvider;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
@@ -44,21 +43,21 @@ public class ImageViewZoomExtenderTest {
 	@Test
 	public void imageViewShouldbeMatrixTypeWhenExtenderIsCreated() {
 		// Given
-		ImageView imageView = new ImageView(Robolectric.application);
+		ImageView imageView = new ImageView(ApplicationProvider.getApplicationContext());
 		// When 
 		ZoomableComponent extender = new ImageViewZoomExtender(imageView);
 		// Then
-		assertTrue(ScaleType.MATRIX.equals(imageView.getScaleType()));
+		assertEquals(ScaleType.MATRIX, imageView.getScaleType());
 	}
 
 	@Test
 	public void zoomLevelShouldBeOriginalLevelWhenExtenderIsCreated() {
 		// Given
-		ImageView imageView = new ImageView(Robolectric.application);
+		ImageView imageView = new ImageView(ApplicationProvider.getApplicationContext());
 		// When 
 		ZoomableComponent extender = new ImageViewZoomExtender(imageView);
 		// Then
-		assertTrue(extender.getZoomLevel() == ImageViewZoomExtender.ORIGINAL_LEVEL);
+		assertEquals(extender.getZoomLevel(), ImageViewZoomExtender.ORIGINAL_LEVEL, 0.0);
 	}
 
 	@Test
@@ -66,13 +65,13 @@ public class ImageViewZoomExtenderTest {
 		// Given
 		float zoomLevel = 7.0f;
 		ZoomInfo zoomInfo = new ZoomInfo(zoomLevel);
-		ImageView imageView = new ImageView(Robolectric.application);
+		ImageView imageView = new ImageView(ApplicationProvider.getApplicationContext());
 		imageView.setImageBitmap(createTestBitmap());
 		ZoomableComponent extender = new ImageViewZoomExtender(imageView);
 		// When
 		extender.restore(zoomInfo);
 		// Then
-		assertTrue(extender.getZoomLevel() == zoomLevel);
+		assertEquals(extender.getZoomLevel(), zoomLevel, 0.0);
 	}
 	
 	@Test
@@ -124,21 +123,19 @@ public class ImageViewZoomExtenderTest {
 		float targetLevel = 7.0f;
 		float zoomX = 0.0f;
 		float zoomY = 0.0f;
-		ImageView imageView = new ImageView(Robolectric.application);
+		ImageView imageView = new ImageView(ApplicationProvider.getApplicationContext());
 		imageView.setImageBitmap(createTestBitmap());
 		ZoomableComponent extender = new ImageViewZoomExtender(imageView);
 		// When
 		extender.zoomTo(targetLevel, zoomX, zoomY);
 		// Then
-		assertTrue(extender.getZoomLevel() == targetLevel);
+		assertEquals(extender.getZoomLevel(), targetLevel, 0.0);
 	}
 
 	private static Bitmap createTestBitmap() {
-		int[] colors = {Color.BLACK};
 		int width = 300;
 		int height = 300;
-		android.graphics.Bitmap.Config config = android.graphics.Bitmap.Config.ARGB_8888;
-		Bitmap bitmap = Bitmap.createBitmap(colors , width, height, config );
-		return bitmap;
+		Bitmap.Config config = Bitmap.Config.ARGB_8888;
+		return Bitmap.createBitmap(width, height, config );
 	}	
 }

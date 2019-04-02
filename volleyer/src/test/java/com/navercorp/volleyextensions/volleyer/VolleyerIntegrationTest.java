@@ -15,7 +15,7 @@
  */
 package com.navercorp.volleyextensions.volleyer;
 
-import static com.jayway.awaitility.Awaitility.*;
+import static org.awaitility.Awaitility.*;
 import static com.navercorp.volleyextensions.volleyer.mock.ListenerVerifier.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;

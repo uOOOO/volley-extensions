@@ -15,12 +15,7 @@
  */
 package com.navercorp.volleyextensions.volleyer.factory;
 
-import org.apache.http.client.HttpClient;
-
-import android.net.http.AndroidHttpClient;
-import android.os.Build;
-
-import com.android.volley.toolbox.HttpClientStack;
+import com.android.volley.toolbox.BaseHttpStack;
 import com.android.volley.toolbox.HttpStack;
 import com.android.volley.toolbox.HurlStack;
 import com.navercorp.volleyextensions.volleyer.multipart.stack.*;
@@ -47,21 +42,11 @@ public class HttpStackFactory {
 	 * </pre>
 	 * @return Default HttpStack instance
 	 */
-	public static HttpStack createDefaultHttpStack() {
-		HttpStack httpStack = null;
-		HttpClient httpClient = null;
+	public static BaseHttpStack createDefaultHttpStack() {
+		BaseHttpStack httpStack = createHurlStack();
 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
-			httpStack = createHurlStack();
-        } else {
-			// Prior to Gingerbread, HttpUrlConnection was unreliable.
-			// See: http://android-developers.blogspot.com/2011/09/androids-http-clients.html
-			httpClient = createAndroidHttpClient(DEFAULT_USER_AGENT);
-			httpStack = createHttpClientStack(httpClient);
-        }
-
-		MultipartHttpStack multipartStack = new DefaultMultipartHttpStack(httpClient);
-		HttpStack completedStack = new MultipartHttpStackWrapper(httpStack, multipartStack);
+		MultipartHttpStack multipartStack = new DefaultMultipartHttpStack();
+		BaseHttpStack completedStack = new MultipartHttpStackWrapper(httpStack, multipartStack);
 
 		return completedStack;
 	}
@@ -71,21 +56,5 @@ public class HttpStackFactory {
 	 */
 	public static HurlStack createHurlStack() {
 		return new HurlStack();
-	}
-	/**
-	 * Create a HttpClientStack instance (without a multipart feature).
-	 * @param httpClient an instance for HttpClientStack
-	 * @return HttpClientStack instance
-	 */
-	public static HttpClientStack createHttpClientStack(HttpClient httpClient) {
-		return new HttpClientStack(httpClient);
-	}
-	/**
-	 * Create a default HttpClient for HttpClientStack
-	 * @param userAgent
-	 * @return default HttpClient instance
-	 */
-	private static HttpClient createAndroidHttpClient(String userAgent) {
-		return AndroidHttpClient.newInstance(userAgent);
 	}
 }

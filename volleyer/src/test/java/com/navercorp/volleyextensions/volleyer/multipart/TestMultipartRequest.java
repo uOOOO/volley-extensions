@@ -21,8 +21,6 @@ import com.android.volley.Response;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
-import com.navercorp.volleyextensions.volleyer.multipart.Multipart;
-import com.navercorp.volleyextensions.volleyer.multipart.MultipartContainer;
 
 public class TestMultipartRequest extends Request<Object> implements MultipartContainer {
 

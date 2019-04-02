@@ -19,6 +19,8 @@ import static org.junit.Assert.*;
 import static org.mockito.BDDMockito.*;
 import static org.hamcrest.CoreMatchers.*;
 
+import android.util.Log;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
@@ -46,18 +48,23 @@ public class BuilderIntegrationTest {
 
 		@Override
 		public void onResponse(String response) {
-			ShadowLog.d("TestClass", "Result : " + response);
+			Log.d("TestClass", "Result : " + response);
 		}
 	};
 
 	static ErrorListener errorListener = new ErrorListener() {
 		@Override
 		public void onErrorResponse(VolleyError error) {
-			ShadowLog.d("TestClass", "Error : " + error);
+			Log.d("TestClass", "Error : " + error);
 		}
 	};
 
 	RequestQueue requestQueue = mock(RequestQueue.class);
+
+	@Before
+	public void setUp() {
+		ShadowLog.stream = System.out;
+	}
 
 	@Test
 	public void getBuilderChainShouldMakeRequestInstanceFinally() throws AuthFailureError {
@@ -115,7 +122,7 @@ public class BuilderIntegrationTest {
 
 	private static void assertRequest(String url, HttpMethod method, Request<String> request) throws AuthFailureError {
 		// Then
-		assertTrue(request != null);
+		assertNotNull(request);
 		assertThat(request.getUrl(), is(url));
 		assertThat(request.getMethod(), is(method.getMethodCode()));
 		assertThat(request.getHeaders().get("name"), is("JohnDoe"));

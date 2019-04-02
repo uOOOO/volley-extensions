@@ -25,8 +25,6 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 import com.navercorp.volleyextensions.volleyer.http.ContentType;
-import com.navercorp.volleyextensions.volleyer.multipart.Part;
-import com.navercorp.volleyextensions.volleyer.multipart.StringPart;
 
 public class StringPartTest {
 
