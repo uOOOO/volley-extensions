@@ -45,7 +45,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.5'
     testImplementation 'org.robolectric:robolectric:4.2'
     testImplementation 'androidx.test:core:1.1.0'
-    testImplementation 'org.mockito:mockito-core:2.+'
+    testImplementation 'org.mockito:mockito-core:2.26.0'
     testImplementation 'org.jbundle.util.osgi.wrapped:org.jbundle.util.osgi.wrapped.org.apache.http.client:4.1.2'
     testImplementation 'org.awaitility:awaitility:3.1.6'
     testImplementation 'com.github.kristofa:mock-http-server:4.1'
