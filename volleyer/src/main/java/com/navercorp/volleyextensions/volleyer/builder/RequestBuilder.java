@@ -19,6 +19,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
+import com.android.volley.toolbox.RequestFuture;
 import com.navercorp.volleyextensions.volleyer.VolleyerConfiguration;
 import com.navercorp.volleyextensions.volleyer.http.HttpContent;
 import com.navercorp.volleyextensions.volleyer.http.HttpMethod;
@@ -135,4 +136,13 @@ abstract class RequestBuilder<B extends RequestBuilder<B>> {
 		return builder.execute();
 	}
 
+	/**
+	 * Execute a request immediately without any settings.
+	 * @return RequestFuture instance being executed
+	 */
+	public RequestFuture<Void> executeBlocking() {
+		assertFinishState();
+		BlockingResponseBuilder<Void> builder = withTargetClass(Void.class).toBlocking();
+		return builder.execute();
+	}
 }

@@ -15,30 +15,33 @@
  */
 package com.navercorp.volleyextensions.volleyer.builder;
 
+import android.util.Pair;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
+import com.android.volley.toolbox.RequestFuture;
 import com.navercorp.volleyextensions.volleyer.VolleyerConfiguration;
 import com.navercorp.volleyextensions.volleyer.http.HttpContent;
 import com.navercorp.volleyextensions.volleyer.request.creator.RequestCreator;
 import com.navercorp.volleyextensions.volleyer.request.executor.RequestExecutor;
 import com.navercorp.volleyextensions.volleyer.response.parser.NetworkResponseParser;
 import com.navercorp.volleyextensions.volleyer.util.Assert;
+
 /**
  * A builder class that enables settings for response and that executes a request.
  * @author Wonjun Kim
  *
  * @param <T> Target class that content of a response will be parsed to
  */
-public class ResponseBuilder<T> {
-	
+public class BlockingResponseBuilder<T> {
+
 	private RequestQueue requestQueue;
 	private VolleyerConfiguration configuration;
 	private HttpContent httpContent;
 	private Class<T> clazz;
-	private Listener<T> listener;
-	private ErrorListener errorListener;
 	private NetworkResponseParser responseParser;
 
 	private boolean isDoneToBuild = false;
@@ -49,7 +52,7 @@ public class ResponseBuilder<T> {
 	 * @param httpContent HttpContent instance which is previously set from {@code RequestBuilder}
 	 * @param clazz Target class that content of a response will be parsed to.
 	 */
-	ResponseBuilder(RequestQueue requestQueue, VolleyerConfiguration configuration, HttpContent httpContent, Class<T> clazz) {
+	BlockingResponseBuilder(RequestQueue requestQueue, VolleyerConfiguration configuration, HttpContent httpContent, Class<T> clazz) {
 		Assert.notNull(requestQueue, "RequestQueue");
 		Assert.notNull(configuration, "VolleyerConfiguration");
 		Assert.notNull(httpContent, "HttpContent");
@@ -59,30 +62,6 @@ public class ResponseBuilder<T> {
 		this.configuration = configuration;
 		this.httpContent = httpContent;
 		this.clazz = clazz;
-	}
-
-	/**
-	 * Set a listener for a response.
-	 * @param listener volley listener
-	 */
-	public ResponseBuilder<T> withListener(Listener<T> listener) {
-		assertFinishState();
-		this.listener = listener;
-		return this;
-	}
-
-	/**
-	 * <pre>
-	 * Set an error listener for a response.
-	 * NOTE : If this is not set, volleyer sets up an ErrorListener instance
-	 *        of {@code VolleyerConfiguration} as a fallback for a Request.
-	 * </pre>
-	 * @param errorListener volley error listener
-	 */
-	public ResponseBuilder<T> withErrorListener(ErrorListener errorListener) {
-		assertFinishState();
-		this.errorListener = errorListener;
-		return this;
 	}
 
 	/**
@@ -102,7 +81,7 @@ public class ResponseBuilder<T> {
 	 * </pre>
 	 * @param responseParser
 	 */
-	public ResponseBuilder<T> withResponseParser(NetworkResponseParser responseParser) {
+	public BlockingResponseBuilder<T> withResponseParser(NetworkResponseParser responseParser) {
 		Assert.notNull(responseParser, "Response Parser");
 		assertFinishState();
 		this.responseParser = responseParser;
@@ -113,19 +92,18 @@ public class ResponseBuilder<T> {
 	 * Execute a request finally on a running RequestQueue.
 	 * @return Request instance being executed
 	 */
-	public Request<T> execute() {
-		setFallbackListenerIfNull();
-		setFallbackErrorListenerIfNull();
+	public RequestFuture<T> execute() {
 		setFallbackResponseParserIfNull();
 
-		Request<T> request = buildRequest();
-		// Do not execute if request is null
-		if (request == null) {
-			return request;
+		Pair<Request<T>, RequestFuture<T>> requests = buildRequestFuture();
+		if (requests == null) {
+			return null;
 		}
-		executeRequest(request);
+		Request<T> request = requests.first;
+		RequestFuture<T> requestFuture = requests.second;
+		executeRequestFuture(request, requestFuture);
 		markFinishState();
-		return request;
+		return requestFuture;
 	}
 
 	/**
@@ -135,32 +113,6 @@ public class ResponseBuilder<T> {
 		isDoneToBuild = true;
 		// Let requestQueue be null for avoiding memory leak when this builder is referenced by some variable.
 		requestQueue = null;
-	}
-
-	/**
-	 * Set a empty listener if listener is not set.
-	 */
-	private void setFallbackListenerIfNull() {
-		if (listener != null) {
-			return;
-		}
-		listener = createEmptyListener();
-	}
-
-	private Listener<T> createEmptyListener() {
-		return new Listener<T>() {
-
-			@Override
-			public void onResponse(Object response) {
-			}
-		};
-	}
-
-	private void setFallbackErrorListenerIfNull() {
-		if (errorListener != null) {
-			return;
-		}
-		errorListener = configuration.getFallbackErrorListener();
 	}
 
 	private void setFallbackResponseParserIfNull() {
@@ -175,20 +127,20 @@ public class ResponseBuilder<T> {
 	 * Create a {@code Request} object by {@link RequestCreator} of {@code VolleyerConfiguration}.
 	 * @return Newly built Request object
 	 */
-	private Request<T> buildRequest() {
+	@Nullable
+	private Pair<Request<T>, RequestFuture<T>> buildRequestFuture() {
 		RequestCreator requestCreator = configuration.getRequestCreator();
-		return requestCreator.createRequest(httpContent, clazz, responseParser, listener, errorListener);
+		RequestFuture<T> requestFuture = RequestFuture.newFuture();
+		Request<T> request =
+				requestCreator.createRequest(httpContent, clazz, responseParser, requestFuture, requestFuture);
+		return request == null ? null : Pair.create(request, requestFuture);
 	}
 
 	/**
 	 * Execute a given request by {@link RequestExecutor} of {@code VolleyerConfiguration}.
 	 */
-	private void executeRequest(Request<T> request) {
+	private void executeRequestFuture(@NonNull Request<T> request, @NonNull RequestFuture<T> requestFuture) {
 		RequestExecutor executor = configuration.getRequestExecutor();
-		executor.executeRequest(requestQueue, request);
-	}
-
-	public BlockingResponseBuilder<T> toBlocking() {
-		return new BlockingResponseBuilder<>(requestQueue, configuration, httpContent, clazz);
+		executor.executeRequestFuture(requestQueue, request, requestFuture);
 	}
 }

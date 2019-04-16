@@ -21,6 +21,7 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+import com.android.volley.toolbox.RequestFuture;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.robolectric.*;
@@ -315,7 +316,13 @@ public class VolleyerIntegrationTest {
 			public <T> void executeRequest(RequestQueue requestQueue,
 					Request<T> request) {
 				// Do nothing
-			}};
+			}
+
+			@Override
+			public <T> void executeRequestFuture(RequestQueue requestQueue, Request<T> request, RequestFuture<T> requestFuture) {
+				// Do nothing
+			}
+		};
 		VolleyerConfiguration configuration = new VolleyerConfiguration(DefaultVolleyerConfigurationFactory.createRequestCreator(), 
 																		noExecutor,
 																		DefaultVolleyerConfigurationFactory.createNetworkResponseParser(),
