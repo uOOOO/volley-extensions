@@ -18,17 +18,15 @@ package com.navercorp.volleyextensions.volleyer.builder;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+import com.android.volley.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
 import com.navercorp.volleyextensions.volleyer.VolleyerConfiguration;
 import com.navercorp.volleyextensions.volleyer.factory.DefaultVolleyerConfigurationFactory;
 import com.navercorp.volleyextensions.volleyer.http.HttpMethod;
@@ -49,9 +47,10 @@ public class RequestBuilderTest {
 		String url = "test";
 		HttpMethod method = HttpMethod.GET;
 		VolleyerConfiguration nullVolleyerConfiguration = null;
-		
+		RetryPolicy retryPolicy = new DefaultRetryPolicy();
+
 		// When & Then
-		new TestPurposeRequestBuilder(requestQueue, nullVolleyerConfiguration, url, method);
+		new TestPurposeRequestBuilder(requestQueue, nullVolleyerConfiguration, url, method, retryPolicy);
 	}
 
 	@Test(expected=NullPointerException.class)
@@ -60,9 +59,10 @@ public class RequestBuilderTest {
 		String nullUrl = null;
 		HttpMethod method = HttpMethod.GET;
 		VolleyerConfiguration configuration = DefaultVolleyerConfigurationFactory.create();
-		
+		RetryPolicy retryPolicy = new DefaultRetryPolicy();
+
 		// When & Then
-		new TestPurposeRequestBuilder(requestQueue, configuration, nullUrl, method);
+		new TestPurposeRequestBuilder(requestQueue, configuration, nullUrl, method, retryPolicy);
 	}
 
 	@Test(expected=NullPointerException.class)
@@ -71,9 +71,22 @@ public class RequestBuilderTest {
 		String url = "test";
 		HttpMethod nullMethod = null;
 		VolleyerConfiguration configuration = DefaultVolleyerConfigurationFactory.create();
-		
+		RetryPolicy retryPolicy = new DefaultRetryPolicy();
+
 		// When & Then
-		new TestPurposeRequestBuilder(requestQueue, configuration, url, nullMethod);
+		new TestPurposeRequestBuilder(requestQueue, configuration, url, nullMethod, retryPolicy);
+	}
+
+	@Test(expected=NullPointerException.class)
+	public void requestBuilderConstructorShouldThrowNpeWhenRetryPolicyIsNull() {
+		// Given
+		String url = "test";
+		HttpMethod nullMethod = null;
+		VolleyerConfiguration configuration = DefaultVolleyerConfigurationFactory.create();
+		RetryPolicy retryPolicy = null;
+
+		// When & Then
+		new TestPurposeRequestBuilder(requestQueue, configuration, url, nullMethod, retryPolicy);
 	}
 
 	@Test(expected=NullPointerException.class)
@@ -85,7 +98,10 @@ public class RequestBuilderTest {
 		String url = "test";
 		HttpMethod method = HttpMethod.GET;
 		VolleyerConfiguration configuration = DefaultVolleyerConfigurationFactory.create();
-		TestPurposeRequestBuilder builder = new TestPurposeRequestBuilder(requestQueue, configuration, url, method);
+		RetryPolicy retryPolicy = new DefaultRetryPolicy();
+
+		TestPurposeRequestBuilder builder =
+				new TestPurposeRequestBuilder(requestQueue, configuration, url, method, retryPolicy);
 		
 		// When & Then
 		builder.addHeader(nullKey, value);
@@ -100,7 +116,9 @@ public class RequestBuilderTest {
 		String url = "test";
 		HttpMethod method = HttpMethod.GET;
 		VolleyerConfiguration configuration = DefaultVolleyerConfigurationFactory.create();
-		TestPurposeRequestBuilder builder = new TestPurposeRequestBuilder(requestQueue, configuration, url, method);
+		RetryPolicy retryPolicy = new DefaultRetryPolicy();
+		TestPurposeRequestBuilder builder =
+				new TestPurposeRequestBuilder(requestQueue, configuration, url, method, retryPolicy);
 		
 		// When & Then
 		builder.addHeader(key, nullValue);
@@ -115,12 +133,30 @@ public class RequestBuilderTest {
 		String url = "test";
 		HttpMethod method = HttpMethod.GET;
 		VolleyerConfiguration configuration = DefaultVolleyerConfigurationFactory.create();
-		TestPurposeRequestBuilder builder = new TestPurposeRequestBuilder(requestQueue, configuration, url, method);
+		RetryPolicy retryPolicy = new DefaultRetryPolicy();
+		TestPurposeRequestBuilder builder =
+				new TestPurposeRequestBuilder(requestQueue, configuration, url, method, retryPolicy);
 		
 		// When
 		TestPurposeRequestBuilder newBuilder = builder.addHeader(key, value);
 		// Then
-		assertTrue(builder == newBuilder);
+		assertSame(builder, newBuilder);
+	}
+
+	@Test
+	public void setRetryPolicyMethodShouldReturnSameInstanceOfBuilder() {
+		// Given
+		String url = "test";
+		HttpMethod method = HttpMethod.GET;
+		VolleyerConfiguration configuration = DefaultVolleyerConfigurationFactory.create();
+		RetryPolicy retryPolicy = new DefaultRetryPolicy();
+		TestPurposeRequestBuilder builder =
+				new TestPurposeRequestBuilder(requestQueue, configuration, url, method, retryPolicy);
+
+		// When
+		TestPurposeRequestBuilder newBuilder = builder.setRetryPolicy(retryPolicy);
+		// Then
+		assertSame(builder, newBuilder);
 	}
 
 	@Test
@@ -129,7 +165,9 @@ public class RequestBuilderTest {
 		String url = "test";
 		HttpMethod method = HttpMethod.GET;
 		VolleyerConfiguration configuration = DefaultVolleyerConfigurationFactory.create();
-		TestPurposeRequestBuilder builder = new TestPurposeRequestBuilder(requestQueue, configuration, url, method);
+		RetryPolicy retryPolicy = new DefaultRetryPolicy();
+		TestPurposeRequestBuilder builder =
+				new TestPurposeRequestBuilder(requestQueue, configuration, url, method, retryPolicy);
 		
 		// When
 		ResponseBuilder<String> responseBuilder = builder.withTargetClass(String.class);
@@ -146,7 +184,9 @@ public class RequestBuilderTest {
 		String url = "test";
 		HttpMethod method = HttpMethod.GET;
 		VolleyerConfiguration configuration = DefaultVolleyerConfigurationFactory.create();
-		TestPurposeRequestBuilder builder = new TestPurposeRequestBuilder(requestQueue, configuration, url, method);
+		RetryPolicy retryPolicy = new DefaultRetryPolicy();
+		TestPurposeRequestBuilder builder =
+				new TestPurposeRequestBuilder(requestQueue, configuration, url, method, retryPolicy);
 		
 		// When & Then
 		builder.withTargetClass(String.class);
@@ -161,7 +201,9 @@ public class RequestBuilderTest {
 		String url = "test";
 		HttpMethod method = HttpMethod.GET;
 		VolleyerConfiguration configuration = DefaultVolleyerConfigurationFactory.create();
-		TestPurposeRequestBuilder builder = new TestPurposeRequestBuilder(requestQueue, configuration, url, method);
+		RetryPolicy retryPolicy = new DefaultRetryPolicy();
+		TestPurposeRequestBuilder builder =
+				new TestPurposeRequestBuilder(requestQueue, configuration, url, method, retryPolicy);
 		Class<?> clazz = null;
 		// When & Then
 		builder.withTargetClass(clazz);
@@ -176,7 +218,9 @@ public class RequestBuilderTest {
 		String url = "test";
 		HttpMethod method = HttpMethod.GET;
 		VolleyerConfiguration configuration = DefaultVolleyerConfigurationFactory.create();
-		TestPurposeRequestBuilder builder = new TestPurposeRequestBuilder(requestQueue, configuration, url, method);
+		RetryPolicy retryPolicy = new DefaultRetryPolicy();
+		TestPurposeRequestBuilder builder =
+				new TestPurposeRequestBuilder(requestQueue, configuration, url, method, retryPolicy);
 		Class<String> clazz = String.class;
 		// When
 		ResponseBuilder<String> responseBuilder = builder.withTargetClass(clazz);
@@ -190,7 +234,9 @@ public class RequestBuilderTest {
 		String url = "test";
 		HttpMethod method = HttpMethod.GET;
 		VolleyerConfiguration configuration = DefaultVolleyerConfigurationFactory.create();
-		TestPurposeRequestBuilder builder = new TestPurposeRequestBuilder(requestQueue, configuration, url, method);
+		RetryPolicy retryPolicy = new DefaultRetryPolicy();
+		TestPurposeRequestBuilder builder =
+				new TestPurposeRequestBuilder(requestQueue, configuration, url, method, retryPolicy);
 		Class<String> clazz = String.class;
 		// When
 		builder.withTargetClass(clazz);
@@ -204,7 +250,9 @@ public class RequestBuilderTest {
 		String url = "http://test";
 		HttpMethod method = HttpMethod.GET;
 		VolleyerConfiguration configuration = DefaultVolleyerConfigurationFactory.create();
-		TestPurposeRequestBuilder builder = new TestPurposeRequestBuilder(requestQueue, configuration, url, method);
+		RetryPolicy retryPolicy = new DefaultRetryPolicy();
+		TestPurposeRequestBuilder builder =
+				new TestPurposeRequestBuilder(requestQueue, configuration, url, method, retryPolicy);
 		// When
 		Request<Void> request = builder.execute();
 		// Then
@@ -217,7 +265,9 @@ public class RequestBuilderTest {
 		String url = "http://test";
 		HttpMethod method = HttpMethod.GET;
 		VolleyerConfiguration configuration = DefaultVolleyerConfigurationFactory.create();
-		TestPurposeRequestBuilder builder = new TestPurposeRequestBuilder(requestQueue, configuration, url, method);
+		RetryPolicy retryPolicy = new DefaultRetryPolicy();
+		TestPurposeRequestBuilder builder =
+				new TestPurposeRequestBuilder(requestQueue, configuration, url, method, retryPolicy);
 		// When
 		builder.execute();
 		// Then
@@ -230,7 +280,9 @@ public class RequestBuilderTest {
 		String url = "http://test";
 		HttpMethod method = HttpMethod.GET;
 		VolleyerConfiguration configuration = DefaultVolleyerConfigurationFactory.create();
-		TestPurposeRequestBuilder builder = new TestPurposeRequestBuilder(requestQueue, configuration, url, method);
+		RetryPolicy retryPolicy = new DefaultRetryPolicy();
+		TestPurposeRequestBuilder builder =
+				new TestPurposeRequestBuilder(requestQueue, configuration, url, method, retryPolicy);
 		Listener<String> listener = new Listener<String>(){
 
 			@Override
@@ -248,7 +300,9 @@ public class RequestBuilderTest {
 		String url = "http://test";
 		HttpMethod method = HttpMethod.GET;
 		VolleyerConfiguration configuration = DefaultVolleyerConfigurationFactory.create();
-		TestPurposeRequestBuilder builder = new TestPurposeRequestBuilder(requestQueue, configuration, url, method);
+		RetryPolicy retryPolicy = new DefaultRetryPolicy();
+		TestPurposeRequestBuilder builder =
+				new TestPurposeRequestBuilder(requestQueue, configuration, url, method, retryPolicy);
 		ErrorListener errorListener = new ErrorListener(){
 
 			@Override

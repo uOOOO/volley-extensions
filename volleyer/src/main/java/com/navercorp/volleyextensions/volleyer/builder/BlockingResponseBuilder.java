@@ -20,8 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.Response.Listener;
+import com.android.volley.RetryPolicy;
 import com.android.volley.toolbox.RequestFuture;
 import com.navercorp.volleyextensions.volleyer.VolleyerConfiguration;
 import com.navercorp.volleyextensions.volleyer.http.HttpContent;
@@ -43,6 +42,7 @@ public class BlockingResponseBuilder<T> {
 	private HttpContent httpContent;
 	private Class<T> clazz;
 	private NetworkResponseParser responseParser;
+	private RetryPolicy retryPolicy;
 
 	private boolean isDoneToBuild = false;
 	/**
@@ -50,18 +50,22 @@ public class BlockingResponseBuilder<T> {
 	 * @param requestQueue running RequestQueue instance which will executes a request
 	 * @param configuration VolleyerConfiguration instance. See {@link VolleyerConfiguration}.
 	 * @param httpContent HttpContent instance which is previously set from {@code RequestBuilder}
+	 * @param retryPolicy RetryPolicy instance which is previously set from {@code RequestBuilder}
 	 * @param clazz Target class that content of a response will be parsed to.
 	 */
-	BlockingResponseBuilder(RequestQueue requestQueue, VolleyerConfiguration configuration, HttpContent httpContent, Class<T> clazz) {
+	BlockingResponseBuilder(RequestQueue requestQueue, VolleyerConfiguration configuration, HttpContent httpContent,
+							Class<T> clazz, @NonNull RetryPolicy retryPolicy) {
 		Assert.notNull(requestQueue, "RequestQueue");
 		Assert.notNull(configuration, "VolleyerConfiguration");
 		Assert.notNull(httpContent, "HttpContent");
 		Assert.notNull(clazz, "Target class token");
+		Assert.notNull(retryPolicy, "RetryPolicy");
 
 		this.requestQueue = requestQueue;
 		this.configuration = configuration;
 		this.httpContent = httpContent;
 		this.clazz = clazz;
+		this.retryPolicy = retryPolicy;
 	}
 
 	/**
@@ -132,7 +136,7 @@ public class BlockingResponseBuilder<T> {
 		RequestCreator requestCreator = configuration.getRequestCreator();
 		RequestFuture<T> requestFuture = RequestFuture.newFuture();
 		Request<T> request =
-				requestCreator.createRequest(httpContent, clazz, responseParser, requestFuture, requestFuture);
+				requestCreator.createRequest(httpContent, clazz, responseParser, requestFuture, requestFuture, retryPolicy);
 		return request == null ? null : Pair.create(request, requestFuture);
 	}
 

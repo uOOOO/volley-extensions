@@ -20,6 +20,7 @@ import static org.mockito.BDDMockito.*;
 import static org.hamcrest.CoreMatchers.*;
 
 import android.util.Log;
+import com.android.volley.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,12 +28,8 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowLog;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
 import com.navercorp.volleyextensions.volleyer.VolleyerConfiguration;
 import com.navercorp.volleyextensions.volleyer.factory.DefaultVolleyerConfigurationFactory;
 import com.navercorp.volleyextensions.volleyer.http.HttpMethod;
@@ -43,6 +40,7 @@ public class BuilderIntegrationTest {
 	static VolleyerConfiguration configuration = DefaultVolleyerConfigurationFactory.create();
 	static String url = "http://test";
 	static String body = "Test body";
+	static RetryPolicy retryPolicy = new DefaultRetryPolicy();
 
 	static Listener<String> listener = new Listener<String>() {
 
@@ -68,14 +66,14 @@ public class BuilderIntegrationTest {
 
 	@Test
 	public void getBuilderChainShouldMakeRequestInstanceFinally() throws AuthFailureError {
-		GetBuilder getBuilder = new GetBuilder(requestQueue, configuration, url);
+		GetBuilder getBuilder = new GetBuilder(requestQueue, configuration, url, retryPolicy);
 		Request<String> request = createRequest(url, getBuilder);
 		assertRequest(url, HttpMethod.GET, request);
 	}
 
 	@Test
 	public void postBuilderChainShouldMakeRequestInstanceFinally() throws AuthFailureError {
-		PostBuilder postBuilder = new PostBuilder(requestQueue, configuration, url);
+		PostBuilder postBuilder = new PostBuilder(requestQueue, configuration, url, retryPolicy);
 		buildBodyOptionFor(postBuilder);
 		Request<String> request = createRequest(url, postBuilder);
 		assertRequest(url, HttpMethod.POST, request);
@@ -92,7 +90,7 @@ public class BuilderIntegrationTest {
 
 	@Test
 	public void putBuilderChainShouldMakeRequestInstanceFinally() throws AuthFailureError {
-		PutBuilder putBuilder = new PutBuilder(requestQueue, configuration, url);
+		PutBuilder putBuilder = new PutBuilder(requestQueue, configuration, url, retryPolicy);
 		buildBodyOptionFor(putBuilder);
 		Request<String> request = createRequest(url, putBuilder);
 		assertRequest(url, HttpMethod.PUT, request);
@@ -101,7 +99,7 @@ public class BuilderIntegrationTest {
 
 	@Test
 	public void deleteBuilderChainShouldMakeRequestInstanceFinally() throws AuthFailureError {
-		DeleteBuilder deleteBuilder = new DeleteBuilder(requestQueue, configuration, url);
+		DeleteBuilder deleteBuilder = new DeleteBuilder(requestQueue, configuration, url, retryPolicy);
 		Request<String> request = createRequest(url, deleteBuilder);
 		assertRequest(url, HttpMethod.DELETE, request);
 	}

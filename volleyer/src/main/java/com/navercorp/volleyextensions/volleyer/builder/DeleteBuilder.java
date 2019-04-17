@@ -15,7 +15,9 @@
  */
 package com.navercorp.volleyextensions.volleyer.builder;
 
+import androidx.annotation.NonNull;
 import com.android.volley.RequestQueue;
+import com.android.volley.RetryPolicy;
 import com.navercorp.volleyextensions.volleyer.VolleyerConfiguration;
 import com.navercorp.volleyextensions.volleyer.http.HttpMethod;
 /**
@@ -25,8 +27,8 @@ import com.navercorp.volleyextensions.volleyer.http.HttpMethod;
  */
 public class DeleteBuilder extends RequestBuilder<DeleteBuilder>{
 
-	public DeleteBuilder(RequestQueue requestQueue, VolleyerConfiguration configuration, String url) {
-		super(requestQueue, configuration, url, HttpMethod.DELETE);
+	public DeleteBuilder(RequestQueue requestQueue, VolleyerConfiguration configuration, String url,
+						 @NonNull RetryPolicy retryPolicy) {
+		super(requestQueue, configuration, url, HttpMethod.DELETE, retryPolicy);
 	}
-
 }

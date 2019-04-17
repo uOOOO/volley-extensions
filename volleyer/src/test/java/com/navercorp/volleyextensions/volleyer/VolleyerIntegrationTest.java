@@ -21,21 +21,20 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+import androidx.annotation.NonNull;
+import com.android.volley.*;
 import com.android.volley.toolbox.RequestFuture;
+import org.apache.tools.ant.taskdefs.Retry;
+import org.awaitility.Duration;
 import org.junit.*;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.robolectric.*;
 import org.robolectric.annotation.Config;
 import org.simpleframework.xml.Element;
 
-import com.android.volley.NetworkResponse;
-import com.android.volley.ParseError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.NoCache;
@@ -51,6 +50,8 @@ import com.navercorp.volleyextensions.volleyer.request.creator.RequestCreator;
 import com.navercorp.volleyextensions.volleyer.request.executor.RequestExecutor;
 import com.navercorp.volleyextensions.volleyer.response.parser.JacksonNetworkResponseParser;
 import com.navercorp.volleyextensions.volleyer.response.parser.NetworkResponseParser;
+
+import java.util.concurrent.TimeUnit;
 
 import static com.navercorp.volleyextensions.volleyer.Volleyer.*;
 
@@ -346,8 +347,9 @@ public class VolleyerIntegrationTest {
 
 			@Override
 			public <T> Request<T> createRequest(HttpContent httpContent,
-					Class<T> clazz, NetworkResponseParser responseParser,
-					Listener<T> listener, ErrorListener errorListener) {
+												Class<T> clazz, NetworkResponseParser responseParser,
+												Listener<T> listener, ErrorListener errorListener,
+												@NonNull RetryPolicy retryPolicy) {
 				return null;
 			}};
 
@@ -426,5 +428,24 @@ public class VolleyerIntegrationTest {
 	private static class Person {
 		@Element(name = "name")
 		public String name;
-	}	
+	}
+
+	@Test
+	public void volleyerShouldRetryOnceDefaultRetryPolicyIfSet() throws Exception {
+		// Given
+		responseProvider.expect(com.github.kristofa.test.http.Method.GET, "/")
+				.respondWith(401, "text/plain", "401Error");
+		DefaultRetryPolicy retryPolicy = spy(new DefaultRetryPolicy());
+		// When
+		volleyer(requestQueue)
+				.get(url)
+				.setRetryPolicy(retryPolicy)
+				.withErrorListener(errorListener)
+				.execute();
+		// Then
+		with().await("401Error")
+				.until(
+						wasErrorListenerCalled(errorListener));
+		verify(retryPolicy, times(1)).retry(ArgumentMatchers.any(VolleyError.class));
+	}
 }

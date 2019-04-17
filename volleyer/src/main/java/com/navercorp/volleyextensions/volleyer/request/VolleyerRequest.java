@@ -17,10 +17,8 @@ package com.navercorp.volleyextensions.volleyer.request;
 
 import java.util.Map;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.NetworkResponse;
-import com.android.volley.Request;
-import com.android.volley.Response;
+import androidx.annotation.NonNull;
+import com.android.volley.*;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.navercorp.volleyextensions.volleyer.http.HttpContent;
@@ -48,19 +46,23 @@ public class VolleyerRequest<T> extends Request<T> implements MultipartContainer
 	 * @param responseParser NetworkResponseParser instance from builder
 	 * @param listener Volley listener instance from builder
 	 * @param errorListener error listener instance from builder
+	 * @param errorListener error listener instance from builder
 	 */
-	public VolleyerRequest(HttpContent httpContent, Class<T> clazz, NetworkResponseParser responseParser, Listener<T> listener, ErrorListener errorListener) {
+	public VolleyerRequest(HttpContent httpContent, Class<T> clazz, NetworkResponseParser responseParser,
+						   Listener<T> listener, ErrorListener errorListener, @NonNull RetryPolicy retryPolicy) {
 		super(httpContent.getMethod().getMethodCode(), httpContent.getUrl(), errorListener);
 
 		Assert.notNull(clazz, "Target class token");
 		Assert.notNull(responseParser, "NetworkResponseParser");
 		Assert.notNull(listener, "listener");
+		Assert.notNull(retryPolicy, "RetryPolicy");
 
 		this.httpContent = httpContent;
 		this.responseParser = responseParser;
 		this.listener = listener;
 		this.clazz = clazz;
-		
+
+		setRetryPolicy(retryPolicy);
 	}
 
 	@Override

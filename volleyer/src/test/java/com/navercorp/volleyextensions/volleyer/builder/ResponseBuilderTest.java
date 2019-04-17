@@ -15,8 +15,11 @@
  */
 package com.navercorp.volleyextensions.volleyer.builder;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.mock;
+
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.RetryPolicy;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,8 +48,9 @@ public class ResponseBuilderTest {
 		HttpContent httpContent = new HttpContent(url, method);
 		VolleyerConfiguration nullConfiguration = null;
 		Class<String> clazz = String.class;
+		RetryPolicy retryPolicy = new DefaultRetryPolicy();
 		// When & Then
-		new ResponseBuilder<String>(requestQueue, nullConfiguration, httpContent, clazz);
+		new ResponseBuilder<String>(requestQueue, nullConfiguration, httpContent, clazz, retryPolicy);
 	}
 
 	@Test(expected=NullPointerException.class)
@@ -55,8 +59,9 @@ public class ResponseBuilderTest {
 		HttpContent nullHttpContent = null;
 		VolleyerConfiguration configuration = DefaultVolleyerConfigurationFactory.create();
 		Class<String> clazz = String.class;
+		RetryPolicy retryPolicy = new DefaultRetryPolicy();
 		// When & Then
-		new ResponseBuilder<String>(requestQueue, configuration, nullHttpContent, clazz);
+		new ResponseBuilder<String>(requestQueue, configuration, nullHttpContent, clazz, retryPolicy);
 	}
 	
 	@Test(expected=NullPointerException.class)
@@ -67,8 +72,9 @@ public class ResponseBuilderTest {
 		HttpContent httpContent = new HttpContent(url, method);
 		VolleyerConfiguration configuration = DefaultVolleyerConfigurationFactory.create();
 		Class<String> nullClazz = null;
+		RetryPolicy retryPolicy = new DefaultRetryPolicy();
 		// When & Then
-		new ResponseBuilder<String>(requestQueue, configuration, httpContent, nullClazz);
+		new ResponseBuilder<String>(requestQueue, configuration, httpContent, nullClazz, retryPolicy);
 	}
 
 	@Test
@@ -79,7 +85,9 @@ public class ResponseBuilderTest {
 		HttpContent httpContent = new HttpContent(url, method);
 		VolleyerConfiguration configuration = DefaultVolleyerConfigurationFactory.create();
 		Class<String> clazz = String.class;
-		ResponseBuilder<String> builder = new ResponseBuilder<String>(requestQueue, configuration, httpContent, clazz);
+		RetryPolicy retryPolicy = new DefaultRetryPolicy();
+		ResponseBuilder<String> builder =
+				new ResponseBuilder<String>(requestQueue, configuration, httpContent, clazz, retryPolicy);
 		Listener<String> listener = new Listener<String>(){
 			@Override
 			public void onResponse(String response) {
@@ -87,7 +95,7 @@ public class ResponseBuilderTest {
 		// When
 		ResponseBuilder<String> newBuilder = builder.withListener(listener);
 		// Then
-		assertTrue(builder == newBuilder);
+		assertSame(builder, newBuilder);
 	}
 
 	@Test
@@ -98,7 +106,9 @@ public class ResponseBuilderTest {
 		HttpContent httpContent = new HttpContent(url, method);
 		VolleyerConfiguration configuration = DefaultVolleyerConfigurationFactory.create();
 		Class<String> clazz = String.class;
-		ResponseBuilder<String> builder = new ResponseBuilder<String>(requestQueue, configuration, httpContent, clazz);
+		RetryPolicy retryPolicy = new DefaultRetryPolicy();
+		ResponseBuilder<String> builder =
+				new ResponseBuilder<String>(requestQueue, configuration, httpContent, clazz, retryPolicy);
 		ErrorListener errorListener = new ErrorListener (){
 			@Override
 			public void onErrorResponse(VolleyError error) {
@@ -106,7 +116,7 @@ public class ResponseBuilderTest {
 		// When
 		ResponseBuilder<String> newBuilder = builder.withErrorListener(errorListener);
 		// Then
-		assertTrue(builder == newBuilder);
+		assertSame(builder, newBuilder);
 	}
 
 	@Test(expected = IllegalStateException.class)
@@ -117,7 +127,9 @@ public class ResponseBuilderTest {
 		HttpContent httpContent = new HttpContent(url, method);
 		VolleyerConfiguration configuration = DefaultVolleyerConfigurationFactory.create();
 		Class<String> clazz = String.class;
-		ResponseBuilder<String> builder = new ResponseBuilder<String>(requestQueue, configuration, httpContent, clazz);
+		RetryPolicy retryPolicy = new DefaultRetryPolicy();
+		ResponseBuilder<String> builder =
+				new ResponseBuilder<String>(requestQueue, configuration, httpContent, clazz, retryPolicy);
 		Listener<String> listener = new Listener<String>(){
 			@Override
 			public void onResponse(String response) {
@@ -136,7 +148,9 @@ public class ResponseBuilderTest {
 		HttpContent httpContent = new HttpContent(url, method);
 		VolleyerConfiguration configuration = DefaultVolleyerConfigurationFactory.create();
 		Class<String> clazz = String.class;
-		ResponseBuilder<String> builder = new ResponseBuilder<String>(requestQueue, configuration, httpContent, clazz);
+		RetryPolicy retryPolicy = new DefaultRetryPolicy();
+		ResponseBuilder<String> builder =
+				new ResponseBuilder<String>(requestQueue, configuration, httpContent, clazz, retryPolicy);
 		ErrorListener errorListener = new ErrorListener (){
 			@Override
 			public void onErrorResponse(VolleyError error) {
