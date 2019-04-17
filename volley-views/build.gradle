@@ -1,20 +1,15 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 28
-
-
-
+    compileSdkVersion vers.compileSdk
     defaultConfig {
-        minSdkVersion 17
-        targetSdkVersion 28
+        minSdkVersion vers.minSdk
+        targetSdkVersion vers.compileSdk
         versionCode 1
         versionName "1.0"
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testOptions.unitTests.includeAndroidResources = true
     }
-
     buildTypes {
         release {
             minifyEnabled false
@@ -29,15 +24,14 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-
-    implementation 'androidx.appcompat:appcompat:1.1.0-alpha03'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.0'
-    androidTestImplementation 'androidx.test:runner:1.1.2-alpha2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0-alpha02'
-    implementation 'com.android.volley:volley:1.1.1'
-    testImplementation 'org.robolectric:robolectric:4.2'
-    testImplementation 'androidx.test:core:1.1.0'
-    testImplementation 'org.mockito:mockito-core:2.26.0'
+    implementation "androidx.appcompat:appcompat:${vers.android.appcompat}"
+    testImplementation "junit:junit:${vers.test.junit}"
+    testImplementation "androidx.test:core:${vers.android.test.core}"
+    testImplementation "org.mockito:mockito-core:${vers.test.mockito}"
+    testImplementation "org.robolectric:robolectric:${vers.test.robolectric}"
+    androidTestImplementation "androidx.test.ext:junit:${vers.android.test.junitExt}"
+    androidTestImplementation "androidx.test:runner:${vers.android.test.runner}"
+    androidTestImplementation "androidx.test.espresso:espresso-core:${vers.android.test.espressoCore}"
+    implementation "com.android.volley:volley:${vers.volley}"
     implementation project(':volley-extensions-common-utils')
 }

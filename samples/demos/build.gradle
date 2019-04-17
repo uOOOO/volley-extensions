@@ -1,47 +1,39 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 28
-
-
-
+    compileSdkVersion vers.compileSdk
     defaultConfig {
         applicationId "com.navercorp.volleyextensions.sample.demos"
-        minSdkVersion 17
-        targetSdkVersion 28
+        minSdkVersion vers.minSdk
+        targetSdkVersion vers.compileSdk
         versionCode 1
         versionName "1.0"
-
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
     }
-
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-
-    implementation 'com.android.support:appcompat-v7:28.0.0'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.0'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    implementation 'com.android.volley:volley:1.1.1'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.8'
-    implementation("org.simpleframework:simple-xml:2.7.1") {
+    implementation "androidx.appcompat:appcompat:${vers.android.appcompat}"
+    testImplementation "junit:junit:${vers.test.junit}"
+    androidTestImplementation "androidx.test.ext:junit:${vers.android.test.junitExt}"
+    androidTestImplementation "androidx.test:runner:${vers.android.test.runner}"
+    androidTestImplementation "androidx.test.espresso:espresso-core:${vers.android.test.espressoCore}"
+    implementation "com.nostra13.universalimageloader:universal-image-loader:${vers.auil}"
+    implementation "com.fasterxml.jackson.core:jackson-databind:${vers.jackson}"
+    implementation "com.squareup.okhttp:okhttp:${vers.okhttp}"
+    implementation("org.simpleframework:simple-xml:${vers.simplexml}") {
         exclude group: 'stax', module: 'stax-api'
         exclude group: 'stax', module: 'stax'
         exclude group: 'xpp3', module: 'xpp3'
     }
-    implementation 'com.squareup.okhttp:okhttp:1.2.1'
-    implementation 'com.nostra13.universalimageloader:universal-image-loader:1.8.5'
+    implementation "com.android.volley:volley:${vers.volley}"
     implementation project(':volley-caches')
     implementation project(':volley-requests')
     implementation project(':volley-views')
