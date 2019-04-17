@@ -48,3 +48,5 @@ dependencies {
     implementation "com.android.volley:volley:${vers.volley}"
 //    testImplementation 'org.jbundle.util.osgi.wrapped:org.jbundle.util.osgi.wrapped.org.apache.http.client:4.1.2'
 }
+
+apply from: rootProject.file('gradle/publish-local-maven.gradle')

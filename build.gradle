@@ -1,3 +1,6 @@
+import com.android.build.gradle.AppPlugin
+import com.android.build.gradle.LibraryPlugin
+
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
@@ -50,6 +53,23 @@ allprojects {
         google()
         jcenter()
 
+    }
+}
+
+subprojects {
+    plugins.withType(AppPlugin) {
+        android {
+            lintOptions {
+                lintConfig file("${rootProject.projectDir}/lint.xml")
+            }
+        }
+    }
+    plugins.withType(LibraryPlugin) {
+        android {
+            lintOptions {
+                lintConfig file("${rootProject.projectDir}/lint.xml")
+            }
+        }
     }
 }
 

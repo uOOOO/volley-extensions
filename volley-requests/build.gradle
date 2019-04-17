@@ -44,3 +44,5 @@ dependencies {
     implementation "com.android.volley:volley:${vers.volley}"
     implementation project(':volley-extensions-common-utils')
 }
+
+apply from: rootProject.file('gradle/publish-local-maven.gradle')
