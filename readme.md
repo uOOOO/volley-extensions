@@ -1,3 +1,9 @@
+This repository was forked from [naver/volley-extensions](https://github.com/naver/volley-extensions).
+
+It's migrated to Android SDK 28 and Android Studio in here.
+
+But whatever related to the legacy http client for Gingerbread (SDK 9) and below was removed.
+
 # Introduction to Volley Extensions
 
 This library provides assistance in developing Android applications using [Volley](https://android.googlesource.com/platform/frameworks/volley/).
