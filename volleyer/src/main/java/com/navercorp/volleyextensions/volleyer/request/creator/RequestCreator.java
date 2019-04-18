@@ -15,9 +15,11 @@
  */
 package com.navercorp.volleyextensions.volleyer.request.creator;
 
+import androidx.annotation.NonNull;
 import com.android.volley.Request;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
+import com.android.volley.RetryPolicy;
 import com.navercorp.volleyextensions.volleyer.http.HttpContent;
 import com.navercorp.volleyextensions.volleyer.response.parser.NetworkResponseParser;
 /**
@@ -35,6 +37,6 @@ public interface RequestCreator {
 	 * @return Request<T> newly created instance 
 	 */
 	<T> Request<T> createRequest(HttpContent httpContent, Class<T> clazz,
-			NetworkResponseParser responseParser, Listener<T> listener,
-			ErrorListener errorListener);
+								 NetworkResponseParser responseParser, Listener<T> listener,
+								 ErrorListener errorListener, @NonNull RetryPolicy retryPolicy);
 }

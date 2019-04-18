@@ -18,7 +18,9 @@ package com.navercorp.volleyextensions.volleyer;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RequestQueue;
+import com.android.volley.RetryPolicy;
 import com.navercorp.volleyextensions.volleyer.builder.*;
 import com.navercorp.volleyextensions.volleyer.factory.DefaultVolleyerConfigurationFactory;
 import com.navercorp.volleyextensions.volleyer.util.Assert;
@@ -78,6 +80,10 @@ public class Volleyer {
 	 * A VolleyerConfiguration instance which is used by {@code Volleyer}.
 	 */
 	private volatile VolleyerConfiguration configuration;
+	/**
+	 * A RetryPolicy instance which is used by {@code Volleyer}.
+	 */
+	private volatile RetryPolicy retryPolicy;
 
 	/**
 	 * Default Constructor
@@ -86,6 +92,7 @@ public class Volleyer {
 	Volleyer(RequestQueue requestQueue) {
 		this.requestQueue = requestQueue;
 		this.configuration = DefaultVolleyerConfigurationFactory.create();
+		this.retryPolicy = new DefaultRetryPolicy();
 	}
 
 	/**
@@ -138,7 +145,7 @@ public class Volleyer {
 	 * @return Builder which can make a request by using method chaining style.
 	 */
 	public GetBuilder get(String url) {
-		return new GetBuilder(requestQueue, configuration, url);
+		return new GetBuilder(requestQueue, configuration, url, retryPolicy);
 	}
 
 	/**
@@ -147,7 +154,7 @@ public class Volleyer {
 	 * @return Builder which can make a request by using method chaining style.
 	 */
 	public PostBuilder post(String url) {
-		return new PostBuilder(requestQueue, configuration, url);
+		return new PostBuilder(requestQueue, configuration, url, retryPolicy);
 	}
 
 	/**
@@ -156,7 +163,7 @@ public class Volleyer {
 	 * @return Builder which can make a request by using method chaining style.
 	 */
 	public PutBuilder put(String url) {
-		return new PutBuilder(requestQueue, configuration, url);
+		return new PutBuilder(requestQueue, configuration, url, retryPolicy);
 	}
 
 	/**
@@ -165,7 +172,7 @@ public class Volleyer {
 	 * @return Builder which can make a request by using method chaining style.
 	 */
 	public DeleteBuilder delete(String url) {
-		return new DeleteBuilder(requestQueue, configuration, url);
+		return new DeleteBuilder(requestQueue, configuration, url, retryPolicy);
 	}
 
 	/**

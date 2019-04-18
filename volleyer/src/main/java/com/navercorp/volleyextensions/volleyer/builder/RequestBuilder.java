@@ -15,10 +15,13 @@
  */
 package com.navercorp.volleyextensions.volleyer.builder;
 
+import androidx.annotation.NonNull;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
+import com.android.volley.RetryPolicy;
+import com.android.volley.toolbox.RequestFuture;
 import com.navercorp.volleyextensions.volleyer.VolleyerConfiguration;
 import com.navercorp.volleyextensions.volleyer.http.HttpContent;
 import com.navercorp.volleyextensions.volleyer.http.HttpMethod;
@@ -38,6 +41,7 @@ abstract class RequestBuilder<B extends RequestBuilder<B>> {
 	private RequestQueue requestQueue;
 	private final VolleyerConfiguration configuration;
 	protected final HttpContent httpContent;
+	private RetryPolicy retryPolicy;
 
 	protected boolean isDoneToBuild = false;
 	/**
@@ -48,13 +52,16 @@ abstract class RequestBuilder<B extends RequestBuilder<B>> {
 	 * @param url Url string like as 'https://...'
 	 * @param method Http method of a request
 	 */
-	public RequestBuilder(RequestQueue requestQueue, VolleyerConfiguration configuration, String url, HttpMethod method) {
+	public RequestBuilder(RequestQueue requestQueue, VolleyerConfiguration configuration, String url, HttpMethod method,
+						  @NonNull RetryPolicy retryPolicy) {
 		Assert.notNull(requestQueue, "RequestQueue");
 		Assert.notNull(configuration, "VolleyerConfiguration");
+		Assert.notNull(configuration, "RetryPolicy");
 
 		this.requestQueue = requestQueue;
 		this.configuration = configuration;
 		httpContent = new HttpContent(url, method);
+		this.retryPolicy = retryPolicy;
 	}
 	/**
 	 * <pre>
@@ -70,7 +77,18 @@ abstract class RequestBuilder<B extends RequestBuilder<B>> {
 		httpContent.addHeader(key, value);
 		return (B) this;
 	}
+	/**
+	 * <pre>
+	 * Set retry policy
+	 * </pre>
+	 * @param retryPolicy RetryPolicy, See {@link RetryPolicy}
+	 */
+	public B setRetryPolicy(@NonNull RetryPolicy retryPolicy) {
+		assertFinishState();
 
+		this.retryPolicy = retryPolicy;
+		return (B) this;
+	}
 	/**
 	 * <pre>
 	 * Throws error when the object is used again.
@@ -91,7 +109,7 @@ abstract class RequestBuilder<B extends RequestBuilder<B>> {
 
 		assertFinishState();
 
-		ResponseBuilder<T> builder = new ResponseBuilder<T>(requestQueue, configuration, httpContent, clazz);
+		ResponseBuilder<T> builder = new ResponseBuilder<>(requestQueue, configuration, httpContent, clazz, retryPolicy);
 		markFinishState();
 		return builder;
 	}
@@ -135,4 +153,13 @@ abstract class RequestBuilder<B extends RequestBuilder<B>> {
 		return builder.execute();
 	}
 
+	/**
+	 * Execute a request immediately without any settings.
+	 * @return RequestFuture instance being executed
+	 */
+	public RequestFuture<Void> executeBlocking() {
+		assertFinishState();
+		BlockingResponseBuilder<Void> builder = withTargetClass(Void.class).toBlocking();
+		return builder.execute();
+	}
 }

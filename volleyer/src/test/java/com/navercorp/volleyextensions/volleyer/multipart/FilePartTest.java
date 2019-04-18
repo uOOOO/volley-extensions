@@ -27,8 +27,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.navercorp.volleyextensions.volleyer.http.ContentType;
-import com.navercorp.volleyextensions.volleyer.multipart.FilePart;
-import com.navercorp.volleyextensions.volleyer.multipart.Part;
 
 public class FilePartTest {
 

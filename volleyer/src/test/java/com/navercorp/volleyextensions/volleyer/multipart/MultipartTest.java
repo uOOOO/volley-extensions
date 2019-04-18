@@ -30,12 +30,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.mockito.Matchers;
-
-import com.navercorp.volleyextensions.volleyer.multipart.FilePart;
-import com.navercorp.volleyextensions.volleyer.multipart.Multipart;
-import com.navercorp.volleyextensions.volleyer.multipart.Part;
-import com.navercorp.volleyextensions.volleyer.multipart.StringPart;
+import org.mockito.ArgumentMatchers;
 
 public class MultipartTest {
 
@@ -239,7 +234,7 @@ public class MultipartTest {
 		// When
 		multipart.write(out);
 		// Then
-		verify(out, atLeastOnce()).write(Matchers.any(byte[].class));
+		verify(out, atLeastOnce()).write(ArgumentMatchers.any(byte[].class));
 	}
 
 	@Test
@@ -249,7 +244,7 @@ public class MultipartTest {
 		// When
 		multipart.write(out);
 		// Then
-		verify(out, never()).write(Matchers.any(byte[].class));
+		verify(out, never()).write(ArgumentMatchers.any(byte[].class));
 	}
 
 	@Test

@@ -37,7 +37,7 @@ public class AmazonListAdapter extends BaseAdapter {
 	private ImageLoader loader;
 	private LayoutInflater inflater;
 
-	private int LAYOUT_LISTVIEW_ITEM_SHOPPING = R.layout.list_item;
+	private int LAYOUT_LISTVIEW_ITEM_SHOPPING = layout.list_item;
 
 	public AmazonListAdapter(Context context, List<ShoppingItem> items) {
 		super();
@@ -84,8 +84,8 @@ public class AmazonListAdapter extends BaseAdapter {
 	}
 
 	protected void setContentToHolder(View convertView, ViewHolder holder) {
-		holder.itemImage = (ImageView) convertView.findViewById(R.id.itemImage);
-		holder.title = (TextView) convertView.findViewById(R.id.itemTitle);
+		holder.itemImage = (ImageView) convertView.findViewById(id.itemImage);
+		holder.title = (TextView) convertView.findViewById(id.itemTitle);
 	}
 
 	protected View getInflatedView() {

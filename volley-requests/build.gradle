@@ -1,0 +1,48 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion vers.compileSdk
+    defaultConfig {
+        minSdkVersion vers.minSdk
+        targetSdkVersion vers.compileSdk
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testOptions.unitTests.includeAndroidResources = true
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "androidx.appcompat:appcompat:${vers.android.appcompat}"
+    testImplementation "junit:junit:${vers.test.junit}"
+    testImplementation "org.mockito:mockito-core:${vers.test.mockito}"
+    testImplementation "org.robolectric:robolectric:${vers.test.robolectric}"
+    testImplementation "org.jbundle.util.osgi.wrapped:org.jbundle.util.osgi.wrapped.org.apache.http.client:${vers.test.httpClient}"
+    testImplementation "org.awaitility:awaitility:${vers.test.awaitility}"
+    testImplementation "com.github.kristofa:mock-http-server:${vers.test.mockHttpServer}"
+    androidTestImplementation "androidx.test.ext:junit:${vers.android.test.junitExt}"
+    androidTestImplementation "androidx.test:runner:${vers.android.test.runner}"
+    androidTestImplementation "androidx.test.espresso:espresso-core:${vers.android.test.espressoCore}"
+    implementation "com.google.code.gson:gson:${vers.gson}"
+    implementation "com.fasterxml.jackson.core:jackson-databind:${vers.jackson}"
+    implementation("org.simpleframework:simple-xml:${vers.simplexml}") {
+        exclude group: 'stax', module: 'stax-api'
+        exclude group: 'stax', module: 'stax'
+        exclude group: 'xpp3', module: 'xpp3'
+    }
+    implementation "com.android.volley:volley:${vers.volley}"
+    implementation project(':volley-extensions-common-utils')
+}
+
+apply from: rootProject.file('gradle/publish-local-maven.gradle')

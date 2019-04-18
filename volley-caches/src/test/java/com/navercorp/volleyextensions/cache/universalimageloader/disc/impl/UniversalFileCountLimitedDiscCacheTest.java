@@ -65,11 +65,11 @@ public class UniversalFileCountLimitedDiscCacheTest {
     	Cache cache = new UniversalFileCountLimitedDiscCache(cacheDir, 2);
 		// When
 		cache.put(key + "1", entry);
-		TimeUnit.MILLISECONDS.sleep(10);
+		TimeUnit.MILLISECONDS.sleep(50);
 		cache.put(key + "2", entry);
-		TimeUnit.MILLISECONDS.sleep(10);		
+		TimeUnit.MILLISECONDS.sleep(50);
 		cache.put(key + "3", entry);
-		TimeUnit.MILLISECONDS.sleep(10);
+		TimeUnit.MILLISECONDS.sleep(50);
 		
 		// Then
 		assertThat(cacheDir.list().length, is(2));

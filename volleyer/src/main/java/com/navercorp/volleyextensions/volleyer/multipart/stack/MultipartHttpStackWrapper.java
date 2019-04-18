@@ -18,11 +18,11 @@ package com.navercorp.volleyextensions.volleyer.multipart.stack;
 import java.io.IOException;
 import java.util.Map;
 
-import org.apache.http.HttpResponse;
+import com.android.volley.toolbox.BaseHttpStack;
+import com.android.volley.toolbox.HttpResponse;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
-import com.android.volley.toolbox.HttpStack;
 import com.navercorp.volleyextensions.volleyer.multipart.MultipartContainer;
 import com.navercorp.volleyextensions.volleyer.util.Assert;
 /**
@@ -30,15 +30,15 @@ import com.navercorp.volleyextensions.volleyer.util.Assert;
  * A wrapper for extending a multipart feature into original {@code HttpStack}.
  * </pre>
  */
-public class MultipartHttpStackWrapper implements HttpStack {
+public class MultipartHttpStackWrapper extends BaseHttpStack {
 
-	private final HttpStack stack;
+	private final BaseHttpStack stack;
 	private MultipartHttpStack multipartStack;
 	/**
 	 * Constructor with default multipart stack.
 	 * @param stack original stack which performs for a common case.
 	 */
-	public MultipartHttpStackWrapper(HttpStack stack) {
+	public MultipartHttpStackWrapper(BaseHttpStack stack) {
 		this(stack, new DefaultMultipartHttpStack());
 	}
 	/**
@@ -46,12 +46,13 @@ public class MultipartHttpStackWrapper implements HttpStack {
 	 * @param stack original stack which performs for a common case.
 	 * @param multipartStack Multipart stack which performs for a multipart case.
 	 */
-	public MultipartHttpStackWrapper(HttpStack stack, MultipartHttpStack multipartStack) {
+	public MultipartHttpStackWrapper(BaseHttpStack stack, MultipartHttpStack multipartStack) {
 		Assert.notNull(stack, "HttpStack");
 		Assert.notNull(multipartStack, "MultipartHttpStack");
 		this.stack = stack;
 		this.multipartStack = multipartStack;
 	}
+
 	/**
 	 * <pre>
 	 * Delegate a perform to {@code MultipartHttpStack} if {@code Request} has a {@code Multipart}.
@@ -59,27 +60,20 @@ public class MultipartHttpStackWrapper implements HttpStack {
 	 * </pre>
 	 */
 	@Override
-	public HttpResponse performRequest(Request<?> request, Map<String, String> additionalHeaders) throws IOException, AuthFailureError {
+	public HttpResponse executeRequest(Request<?> request, Map<String, String> additionalHeaders) throws IOException, AuthFailureError {
 		if (hasMultipart(request)) {
-			return multipartStack.performRequest(request, additionalHeaders);
+			return multipartStack.executeRequest(request, additionalHeaders);
 		}
 
-		return stack.performRequest(request, additionalHeaders);
+		return stack.executeRequest(request, additionalHeaders);
 	}
 
 	private boolean hasMultipart(Request<?> request) {
-		boolean hasMultipart = false;
 		if (!(request instanceof MultipartContainer)) {
-			return hasMultipart;
+			return false;
 		}
 
 		MultipartContainer container = (MultipartContainer) request;
-		if (!container.hasMultipart()) {
-			return hasMultipart;
-		}
-
-		hasMultipart = true;
-		return hasMultipart;
+		return container.hasMultipart();
 	}
-
 }

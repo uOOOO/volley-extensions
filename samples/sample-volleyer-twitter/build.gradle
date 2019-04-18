@@ -1,0 +1,37 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion vers.compileSdk
+    defaultConfig {
+        applicationId "com.navercorp.volleyextensions.sample.volleyer.twitter"
+        minSdkVersion vers.minSdk
+        targetSdkVersion vers.compileSdk
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "androidx.appcompat:appcompat:${vers.android.appcompat}"
+    testImplementation "junit:junit:${vers.test.junit}"
+    androidTestImplementation "androidx.test.ext:junit:${vers.android.test.junitExt}"
+    androidTestImplementation "androidx.test:runner:${vers.android.test.runner}"
+    androidTestImplementation "androidx.test.espresso:espresso-core:${vers.android.test.espressoCore}"
+    implementation "com.fasterxml.jackson.core:jackson-databind:${vers.jackson}"
+    implementation "com.android.volley:volley:${vers.volley}"
+    implementation project(':volley-caches')
+    implementation project(':volley-extensions-common-utils')
+    implementation project(':volleyer')
+}

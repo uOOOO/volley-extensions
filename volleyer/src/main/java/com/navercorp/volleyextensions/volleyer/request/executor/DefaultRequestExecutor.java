@@ -18,6 +18,8 @@ package com.navercorp.volleyextensions.volleyer.request.executor;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.RequestFuture;
+
 /**
  * A RequestExecutor implementation class which executes {@code Request} immediately by adding it into {@code Requestqueue}.
  */
@@ -31,6 +33,16 @@ public class DefaultRequestExecutor implements RequestExecutor {
 		}
 
 		requestQueue.add(request);
+	}
+
+	@Override
+	public <T> void executeRequestFuture(RequestQueue requestQueue, Request<T> request, RequestFuture<T> requestFuture) {
+		if (requestQueue == null) {
+			deliverError(request, "RequestQueue is null. It cannot execute the request of " + request.toString() + ".");
+			return;
+		}
+
+		requestFuture.setRequest(requestQueue.add(request));
 	}
 
 	private <T> void deliverError(Request<T> request, String message) {

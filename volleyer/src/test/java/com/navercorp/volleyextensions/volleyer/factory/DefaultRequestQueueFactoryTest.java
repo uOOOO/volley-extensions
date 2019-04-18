@@ -19,10 +19,10 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 
+import androidx.test.core.app.ApplicationProvider;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -32,7 +32,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HttpStack;
-import com.navercorp.volleyextensions.volleyer.factory.DefaultRequestQueueFactory;
 
 import android.content.Context;
 
@@ -43,7 +42,7 @@ public class DefaultRequestQueueFactoryTest {
 
 	@Before
 	public void setUp() {
-		context = Robolectric.application.getApplicationContext();
+		context = ApplicationProvider.getApplicationContext();
 	}
 
 	@Test

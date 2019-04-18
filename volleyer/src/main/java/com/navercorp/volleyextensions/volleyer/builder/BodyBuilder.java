@@ -17,7 +17,9 @@ package com.navercorp.volleyextensions.volleyer.builder;
 
 import java.io.File;
 
+import androidx.annotation.NonNull;
 import com.android.volley.RequestQueue;
+import com.android.volley.RetryPolicy;
 import com.navercorp.volleyextensions.volleyer.VolleyerConfiguration;
 import com.navercorp.volleyextensions.volleyer.http.HttpMethod;
 import com.navercorp.volleyextensions.volleyer.multipart.FilePart;
@@ -36,8 +38,9 @@ import com.navercorp.volleyextensions.volleyer.util.VolleyerLog;
  */
 abstract class BodyBuilder<B extends BodyBuilder<B>> extends RequestBuilder<B> {
 
-	public BodyBuilder(RequestQueue requestQueue, VolleyerConfiguration configuration, String url, HttpMethod method) {
-		super(requestQueue, configuration, url, method);
+	public BodyBuilder(RequestQueue requestQueue, VolleyerConfiguration configuration, String url, HttpMethod method,
+					   @NonNull RetryPolicy retryPolicy) {
+		super(requestQueue, configuration, url, method, retryPolicy);
 	}
 	/**
 	 * <pre>

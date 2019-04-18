@@ -24,10 +24,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import com.navercorp.volleyextensions.volleyer.multipart.Multipart;
-import com.navercorp.volleyextensions.volleyer.multipart.MultipartContainer;
-import com.navercorp.volleyextensions.volleyer.multipart.Part;
-import com.navercorp.volleyextensions.volleyer.multipart.StringPart;
 import com.navercorp.volleyextensions.volleyer.util.StringUtils;
 
 public class PartTestUtils {

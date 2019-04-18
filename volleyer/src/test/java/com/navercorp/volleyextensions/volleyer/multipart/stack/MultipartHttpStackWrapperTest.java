@@ -17,23 +17,19 @@ package com.navercorp.volleyextensions.volleyer.multipart.stack;
 
 import java.io.IOException;
 
+import com.android.volley.toolbox.BaseHttpStack;
 import org.junit.Test;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
-import com.android.volley.toolbox.HttpStack;
-import com.navercorp.volleyextensions.volleyer.multipart.stack.MultipartHttpStack;
-import com.navercorp.volleyextensions.volleyer.multipart.stack.MultipartHttpStackWrapper;
 import com.navercorp.volleyextensions.volleyer.request.VolleyerRequest;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class MultipartHttpStackWrapperTest {
 
 	static final MultipartHttpStack mockMultipartHttpStack = mock(MultipartHttpStack.class);
-	static final HttpStack mockHttpStack = mock(HttpStack.class);
+	static final BaseHttpStack mockHttpStack = mock(BaseHttpStack.class);
 
 	@Test(expected = NullPointerException.class)
 	public void shouldThrowNpeWhenHttpStackIsNull() {
@@ -52,10 +48,10 @@ public class MultipartHttpStackWrapperTest {
 		MultipartHttpStackWrapper wrapper = new MultipartHttpStackWrapper(mockHttpStack  , mockMultipartHttpStack);
 		// When
 		when(request.hasMultipart()).thenReturn(true);
-		wrapper.performRequest(request, null);
+		wrapper.executeRequest(request, null);
 		// Then
-		verify(mockHttpStack, never()).performRequest(request, null);
-		verify(mockMultipartHttpStack).performRequest(request, null);
+		verify(mockHttpStack, never()).executeRequest(request, null);
+		verify(mockMultipartHttpStack).executeRequest(request, null);
 	}
 
 	@Test
@@ -65,10 +61,10 @@ public class MultipartHttpStackWrapperTest {
 		MultipartHttpStackWrapper wrapper = new MultipartHttpStackWrapper(mockHttpStack, mockMultipartHttpStack);
 		// When
 		when(request.hasMultipart()).thenReturn(false);
-		wrapper.performRequest(request, null);
+		wrapper.executeRequest(request, null);
 		// Then
-		verify(mockHttpStack).performRequest(request, null);
-		verify(mockMultipartHttpStack, never()).performRequest(request, null);
+		verify(mockHttpStack).executeRequest(request, null);
+		verify(mockMultipartHttpStack, never()).executeRequest(request, null);
 	}
 
 	@Test
@@ -77,9 +73,9 @@ public class MultipartHttpStackWrapperTest {
 		Request<?> request = mock(Request.class);
 		MultipartHttpStackWrapper wrapper = new MultipartHttpStackWrapper(mockHttpStack, mockMultipartHttpStack);
 		// When
-		wrapper.performRequest(request, null);
+		wrapper.executeRequest(request, null);
 		// Then
-		verify(mockHttpStack).performRequest(request, null);
-		verify(mockMultipartHttpStack, never()).performRequest(request, null);
+		verify(mockHttpStack).executeRequest(request, null);
+		verify(mockMultipartHttpStack, never()).executeRequest(request, null);
 	}
 }

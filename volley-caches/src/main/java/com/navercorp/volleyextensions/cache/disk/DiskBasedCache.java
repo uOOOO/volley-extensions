@@ -429,10 +429,10 @@ public class DiskBasedCache implements Cache {
         /** Waits until the cache is ready and loaded */
         private void waitForCache() {
             while (mLoadingFiles.size() > 0) {
-                Iterator<Map.Entry<String, Future<CacheHeader>>> iterator =
+                Iterator<Entry<String, Future<CacheHeader>>> iterator =
                         mLoadingFiles.entrySet().iterator();
                 if (iterator.hasNext()) {
-                    Map.Entry<String, Future<CacheHeader>> entry = iterator.next();
+                    Entry<String, Future<CacheHeader>> entry = iterator.next();
                     try {
                         entry.getValue().get();
                     } catch (InterruptedException ignored) {

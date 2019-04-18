@@ -15,22 +15,20 @@
  */
 package com.navercorp.volleyextensions.request;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
-
-import java.io.UnsupportedEncodingException;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
-
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.navercorp.volleyextensions.mock.ResponseHoldListener;
-import com.navercorp.volleyextensions.request.AbstractConverterRequest;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
+
+import java.io.UnsupportedEncodingException;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.*;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest=Config.NONE)

@@ -15,12 +15,19 @@
  */
 package com.navercorp.volleyextensions.request;
 
-import static com.jayway.awaitility.Awaitility.*;
-import static com.navercorp.volleyextensions.mock.ListenerVerifier.*;
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
-
-import org.codehaus.jackson.JsonParseException;
+import com.android.volley.ParseError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.BasicNetwork;
+import com.android.volley.toolbox.HurlStack;
+import com.android.volley.toolbox.NoCache;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.github.kristofa.test.http.MockHttpServer;
+import com.github.kristofa.test.http.SimpleHttpResponseProvider;
+import com.navercorp.volleyextensions.mock.ErrorResponseHoldListener;
+import com.navercorp.volleyextensions.mock.MockExecutorDelivery;
+import com.navercorp.volleyextensions.mock.ResponseHoldListener;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -30,19 +37,13 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowLog;
 
-import com.android.volley.ParseError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.BasicNetwork;
-import com.android.volley.toolbox.HurlStack;
-import com.android.volley.toolbox.NoCache;
-import com.github.kristofa.test.http.MockHttpServer;
-import com.github.kristofa.test.http.SimpleHttpResponseProvider;
-import com.navercorp.volleyextensions.mock.ErrorResponseHoldListener;
-import com.navercorp.volleyextensions.mock.MockExecutorDelivery;
-import com.navercorp.volleyextensions.mock.ResponseHoldListener;
-import com.navercorp.volleyextensions.request.JacksonRequest;
+import static com.navercorp.volleyextensions.mock.ListenerVerifier.wasErrorListenerCalled;
+import static com.navercorp.volleyextensions.mock.ListenerVerifier.wasListenerCalled;
+import static org.awaitility.Awaitility.with;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE)

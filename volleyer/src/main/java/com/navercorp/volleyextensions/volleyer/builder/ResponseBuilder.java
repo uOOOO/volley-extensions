@@ -15,11 +15,12 @@
  */
 package com.navercorp.volleyextensions.volleyer.builder;
 
+import androidx.annotation.NonNull;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
+import com.android.volley.RetryPolicy;
 import com.navercorp.volleyextensions.volleyer.VolleyerConfiguration;
 import com.navercorp.volleyextensions.volleyer.http.HttpContent;
 import com.navercorp.volleyextensions.volleyer.request.creator.RequestCreator;
@@ -41,6 +42,7 @@ public class ResponseBuilder<T> {
 	private Listener<T> listener;
 	private ErrorListener errorListener;
 	private NetworkResponseParser responseParser;
+	private RetryPolicy retryPolicy;
 
 	private boolean isDoneToBuild = false;
 	/**
@@ -48,18 +50,22 @@ public class ResponseBuilder<T> {
 	 * @param requestQueue running RequestQueue instance which will executes a request
 	 * @param configuration VolleyerConfiguration instance. See {@link VolleyerConfiguration}.
 	 * @param httpContent HttpContent instance which is previously set from {@code RequestBuilder}
+	 * @param retryPolicy RetryPolicy instance which is previously set from {@code RequestBuilder}
 	 * @param clazz Target class that content of a response will be parsed to.
 	 */
-	ResponseBuilder(RequestQueue requestQueue, VolleyerConfiguration configuration, HttpContent httpContent, Class<T> clazz) {
+	ResponseBuilder(RequestQueue requestQueue, VolleyerConfiguration configuration, HttpContent httpContent,
+					Class<T> clazz, @NonNull RetryPolicy retryPolicy) {
 		Assert.notNull(requestQueue, "RequestQueue");
 		Assert.notNull(configuration, "VolleyerConfiguration");
 		Assert.notNull(httpContent, "HttpContent");
 		Assert.notNull(clazz, "Target class token");
+		Assert.notNull(retryPolicy, "RetryPolicy");
 
 		this.requestQueue = requestQueue;
 		this.configuration = configuration;
 		this.httpContent = httpContent;
 		this.clazz = clazz;
+		this.retryPolicy = retryPolicy;
 	}
 
 	/**
@@ -178,7 +184,7 @@ public class ResponseBuilder<T> {
 	 */
 	private Request<T> buildRequest() {
 		RequestCreator requestCreator = configuration.getRequestCreator();
-		return requestCreator.createRequest(httpContent, clazz, responseParser, listener, errorListener);
+		return requestCreator.createRequest(httpContent, clazz, responseParser, listener, errorListener, retryPolicy);
 	}
 
 	/**
@@ -187,5 +193,9 @@ public class ResponseBuilder<T> {
 	private void executeRequest(Request<T> request) {
 		RequestExecutor executor = configuration.getRequestExecutor();
 		executor.executeRequest(requestQueue, request);
+	}
+
+	public BlockingResponseBuilder<T> toBlocking() {
+		return new BlockingResponseBuilder<>(requestQueue, configuration, httpContent, clazz, retryPolicy);
 	}
 }

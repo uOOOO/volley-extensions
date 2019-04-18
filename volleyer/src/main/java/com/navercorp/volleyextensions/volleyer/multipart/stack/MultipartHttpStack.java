@@ -15,10 +15,10 @@
  */
 package com.navercorp.volleyextensions.volleyer.multipart.stack;
 
-import com.android.volley.toolbox.HttpStack;
+import com.android.volley.toolbox.BaseHttpStack;
 /**
  * A marker interface for supporting a multipart feature.
  */
-public interface MultipartHttpStack extends HttpStack {
+public abstract class MultipartHttpStack extends BaseHttpStack {
 
 }

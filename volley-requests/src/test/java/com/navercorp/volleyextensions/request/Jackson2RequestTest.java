@@ -15,12 +15,16 @@
  */
 package com.navercorp.volleyextensions.request;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
-
-import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-
+import com.android.volley.NetworkResponse;
+import com.android.volley.ParseError;
+import com.android.volley.Request.Method;
+import com.android.volley.Response;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
+import com.navercorp.volleyextensions.mock.ErrorResponseHoldListener;
+import com.navercorp.volleyextensions.mock.ResponseHoldListener;
 import org.apache.http.protocol.HTTP;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -29,17 +33,12 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowLog;
 
-import com.android.volley.NetworkResponse;
-import com.android.volley.ParseError;
-import com.android.volley.Request.Method;
-import com.android.volley.Response;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
-import com.navercorp.volleyextensions.mock.ErrorResponseHoldListener;
-import com.navercorp.volleyextensions.mock.ResponseHoldListener;
-import com.navercorp.volleyextensions.request.Jackson2Request;
+import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.*;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE)

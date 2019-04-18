@@ -18,7 +18,6 @@ package com.navercorp.volleyextensions.volleyer.util;
 import org.junit.Test;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 public class StringUtilsTest {
 

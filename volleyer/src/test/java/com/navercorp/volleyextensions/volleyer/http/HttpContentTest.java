@@ -21,9 +21,6 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import com.navercorp.volleyextensions.volleyer.http.HttpContent;
-import com.navercorp.volleyextensions.volleyer.http.HttpMethod;
-
 public class HttpContentTest {
 
 	@Test(expected = NullPointerException.class)

@@ -81,11 +81,11 @@ public class UniversalTotalSizeLimitedDiscCacheTest {
     	Cache cache = new UniversalTotalSizeLimitedDiscCache(cacheDir, cacheSize);
 		// When
 		cache.put(key + "1", entry);
-		TimeUnit.MICROSECONDS.sleep(10);
+		TimeUnit.MICROSECONDS.sleep(50);
 		cache.put(key + "2", entry);
-		TimeUnit.MICROSECONDS.sleep(10);
+		TimeUnit.MICROSECONDS.sleep(50);
 		cache.put(key + "3", entry);
-		TimeUnit.MICROSECONDS.sleep(10);
+		TimeUnit.MICROSECONDS.sleep(50);
 		// Then
 		assertThat(cacheDir.list().length, is(2));
 		assertNotNull(cache.get(key + "3"));

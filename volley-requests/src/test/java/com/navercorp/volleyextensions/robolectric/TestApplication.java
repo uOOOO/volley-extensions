@@ -15,9 +15,8 @@
  */
 package com.navercorp.volleyextensions.robolectric;
 
-import org.junit.Ignore;
-
 import android.app.Application;
+import org.junit.Ignore;
 @Ignore
 public class TestApplication extends Application {
 }

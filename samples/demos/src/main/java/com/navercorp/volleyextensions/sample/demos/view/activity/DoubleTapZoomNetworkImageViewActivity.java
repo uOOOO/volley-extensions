@@ -28,7 +28,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 public class DoubleTapZoomNetworkImageViewActivity extends Activity {
-	private static final String SAMPLE_IMAGE_URL = "http://www.phototravelpages.com/wallpapers/sunny-gardens-1024.jpg";
+	private static final String SAMPLE_IMAGE_URL = "https://www.google.co.kr/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png";
 	private ZoomableNetworkImageView zoomableImageView;
 	private ImageLoader imageLoader;
 	private ProgressBar circleProgressBar;
